@@ -1,17 +1,19 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// schema.prisma
 
-generator client {
-  provider = "prisma-client-js"
+model User {
+  id                 Int       @id @default(autoincrement())
+  username           String    @unique
+  email              String    @unique
+  password           String
+  passwordResetToken String?  
+  role               Role      @relation(fields: [roleId], references: [id])
+  roleId             Int
+  createdAt          DateTime  @default(now())
+  status             Boolean
 }
 
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model Task {
-  id        Int      @id @default(autoincrement())
-  title     String
-  description String?
+model Role {
+  id          Int      @id @default(autoincrement())
+  description String
+  users       User[]
 }
