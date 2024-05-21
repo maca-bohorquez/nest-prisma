@@ -1,4 +1,4 @@
 export enum RoleType {
-  SuperAdmin = 'SuperAdmin',
-  Generic = 'Generic',
+	SuperAdmin = "SuperAdmin",
+	Generic = "Generic",
 }

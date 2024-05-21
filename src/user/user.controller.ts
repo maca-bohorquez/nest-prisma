@@ -1,59 +1,50 @@
-import { UserService } from './user.service';
-import { CreateUserDto } from '../auth/dto/create-user.dto';
-import { UpdateUserDto } from '../auth/dto/update-user.dto';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
-import { LoginUserDto } from '../auth/dto/login-user.dto';
-import { ExpressRequestWithUser } from './interfaces/express-request-with-user.interface';
-import { Public } from 'src/common/decorators/public.decorator';
-import { IsMineGuard } from 'src/common/gaurds/is-mine.guard';
+import { UserService } from "./user.service";
 
-@Controller('user')
+import { Body, Controller, Get, Param, Post, Request } from "@nestjs/common";
+
+import { CreateUserDto } from "../auth/dto/create-user.dto";
+import { LoginUserDto } from "../auth/dto/login-user.dto";
+import { Public } from "../common/decorators/public.decorator";
+import { ExpressRequestWithUser } from "./interfaces/express-request-with-user.interface";
+
+@Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-  @Public()
-  @Post('register')
-  registerUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.register(createUserDto);
-  }
-  @Public()
-  @Post('login')
-  loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.userService.login(loginUserDto);
-  }
+	constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+	@Public()
+	@Post("register")
+	registerUser(@Body() createUserDto: CreateUserDto) {
+		return this.userService.create(createUserDto);
+	}
+	@Public()
+	@Post("login")
+	loginUser(@Body() loginUserDto: LoginUserDto) {
+		return this.userService.login(loginUserDto);
+	}
 
-  @Get('me')
-  me(@Request() req: ExpressRequestWithUser) {
-    return req.user;
-  }
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
+	@Get()
+	findAll() {
+		return this.userService.findAll();
+	}
 
-  @Patch(':id')
-  @UseGuards(IsMineGuard)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
+	@Get("me")
+	me(@Request() req: ExpressRequestWithUser) {
+		return req.user;
+	}
+	@Get(":id")
+	findOne(@Param("id") id: string) {
+		return this.userService.findOne(+id);
+	}
 
-  @Delete(':id')
-  @UseGuards(IsMineGuard)
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+	// @Patch(':id')
+	// @UseGuards(IsMineGuard)
+	// update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+	//   return this.userService.update(+id, updateUserDto);
+	// }
+
+	// @Delete(':id')
+	// @UseGuards(IsMineGuard)
+	// remove(@Param('id') id: string) {
+	//   return this.userService.remove(+id);
+	// }
 }
