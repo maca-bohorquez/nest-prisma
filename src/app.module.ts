@@ -1,20 +1,30 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { MailModule } from './mail/mail.module';
-import { PrismaModule } from './prisma/prisma.module';
+
+import { CoreModule } from './core/core.module';
+import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './common/gaurds/auth.gaurd';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true, // ConfigModule  accessible throughout the app
+    CoreModule,
+    UserModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '12h' },
     }),
-    AuthModule,
-    UsersModule,
-    PrismaModule,
-    MailModule,
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}

@@ -1,11 +1,19 @@
-// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
 
 model User {
   id                 Int       @id @default(autoincrement())
   username           String    @unique
   email              String    @unique
   password           String
-  passwordResetToken String?  
+  name               String
+  passwordResetToken String?   // Token for password reset
   role               Role      @relation(fields: [roleId], references: [id])
   roleId             Int
   createdAt          DateTime  @default(now())
